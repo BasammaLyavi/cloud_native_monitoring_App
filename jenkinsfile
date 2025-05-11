@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+    environment {
+        ECR_REGISTRY = '<your-account-id>.dkr.ecr.<region>.amazonaws.com'
+        IMAGE_NAME = 'my_monitoring_app_image'
+    }
+    stages {
+        stage('Clone') {
+            steps {
+                git 'https://github.com/<your-username>/<repo-name>.git'
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t $IMAGE_NAME .'
+            }
+        }
+        stage('Login to ECR') {
+            steps {
+                sh '''
+                aws ecr get-login-password --region <region> | docker login --username AWS --password-stdin $ECR_REGISTRY
+                '''
+            }
+        }
+        stage('Push Image to ECR') {
+            steps {
+                sh '''
+                docker tag $IMAGE_NAME:latest $ECR_REGISTRY/$IMAGE_NAME
+                docker push $ECR_REGISTRY/$IMAGE_NAME
+                '''
+            }
+        }
+        stage('Deploy to EKS') {
+            steps {
+                sh 'kubectl apply -f deployment.yaml'
+            }
+        }
+    }
+}
