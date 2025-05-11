@@ -1,32 +1,32 @@
 pipeline {
     agent any
     environment {
-        ECR_REGISTRY = '<your-account-id>.dkr.ecr.<region>.amazonaws.com'
+        ECR_REGISTRY = '794871348934.dkr.ecr.ap-south-1.amazonaws.com/my_monitoring_app_image'
         IMAGE_NAME = 'my_monitoring_app_image'
     }
     stages {
         stage('Clone') {
             steps {
-                git 'https://github.com/<your-username>/<repo-name>.git'
+                git 'https://github.com/BasammaLyavi/cloud-native-monitoring'
             }
         }
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $IMAGE_NAME .'
+                sh 'docker build -t $my-flask-app .'
             }
         }
         stage('Login to ECR') {
             steps {
                 sh '''
-                aws ecr get-login-password --region <region> | docker login --username AWS --password-stdin $ECR_REGISTRY
+                794871348934.dkr.ecr.ap-south-1.amazonaws.com/my_monitoring_app_imagen 
                 '''
             }
         }
         stage('Push Image to ECR') {
             steps {
                 sh '''
-                docker tag $IMAGE_NAME:latest $ECR_REGISTRY/$IMAGE_NAME
-                docker push $ECR_REGISTRY/$IMAGE_NAME
+                docker tag $my-flask-app:latest $ECR_REGISTRY/$my_monitoring_app_image:latest
+                docker push $ECR_REGISTRY/$my-flask-app:latest
                 '''
             }
         }
