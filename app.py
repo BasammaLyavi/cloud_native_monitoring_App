@@ -1,11 +1,12 @@
 import psutil
 from flask import Flask, render_template
+# Change added to test Jenkins change detection
 
 app = Flask(__name__)
 
 @app.route("/")
 def index():
-    cpu_metric = psutil.cpu_percent()
+    cpu_metric = psutil.cpu_percent()  
     mem_metric = psutil.virtual_memory().percent
     Message = None
     if cpu_metric > 80 or mem_metric > 80:
