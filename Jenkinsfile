@@ -12,7 +12,7 @@ pipeline {
         }
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t basammalyavi12345/app1-k8s:latest .'
+                sh 'docker build -t %flask-app%:%latest% .'
             }
         }
         stage('Deploy to Kubernetes') {
@@ -23,7 +23,7 @@ pipeline {
         }
         stage('Run Container') {
     steps {
-        sh 'docker run -d -p 5000:5000 basammalyavi12345/app1-k8s:latest'
+        sh 'docker run -d -p 5000:5000 %flask-app%:%latest% '
     }
 }
     }
