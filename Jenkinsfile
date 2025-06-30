@@ -6,12 +6,6 @@ pipeline {
         IMAGE_TAG = 'latest'
     }
 
-    stages {
-        stage('Clone Repository') {
-            steps {
-                git 'https://github.com/BasammaLyavi/cloud_native_monitoring_App'
-            }
-        }
 
         stage('Install Python Dependencies') {
             steps {
