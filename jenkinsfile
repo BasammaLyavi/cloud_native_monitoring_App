@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage('Clone') {
             steps {
-                git branch: 'main', url: 'https://github.com/BasammaLyavi/cloud_native_monitoring_App.git'
+                git branch: 'main', url: 'https://github.com/BasammaLyavi/cloud_native_monitoring_App'
             }
         }
         stage('Build Docker Image') {
