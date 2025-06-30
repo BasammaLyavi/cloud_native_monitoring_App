@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flask-app
+  name:  flask-app
   labels:
     app: flask-app
 spec:
@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: my-flask-container
-        image : 794871348934.dkr.ecr.ap-south-1.amazonaws.com/my_monitoring_app_image:latest
+        image : basammalyavi12345/app1-k8s:latest 
         ports:
-        - container_port=5000
+        - containerPort: 5000

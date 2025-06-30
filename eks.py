@@ -1,5 +1,5 @@
 #create deployment and service
-from kubernetes import client, config
+from eks import client, config
 
 # Load Kubernetes configuration
 config.load_kube_config()
