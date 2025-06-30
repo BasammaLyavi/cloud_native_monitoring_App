@@ -1,30 +1,43 @@
 pipeline {
     agent any
+
     environment {
-        IMAGE_NAME = 'flask-app'
+        IMAGE_NAME = 'cloud_native_monitoring_app'
         IMAGE_TAG = 'latest'
     }
+
     stages {
-        stage('Clone') {
+        stage('Clone Repository') {
             steps {
-                git branch: 'main', url: 'https://github.com/BasammaLyavi/cloud_native_monitoring_App'
+                git 'https://github.com/BasammaLyavi/cloud_native_monitoring_App'
             }
         }
+
+        stage('Install Python Dependencies') {
+            steps {
+                bat 'pip install -r requirements.txt'
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t %flask-app%:%latest% .'
+                bat "docker build -t %IMAGE_NAME%:%IMAGE_TAG% ."
             }
         }
-        stage('Deploy to Kubernetes') {
+
+        stage('Run Docker Container') {
             steps {
-                bat 'kubectl apply -f deployment.yaml'
-                bat 'kubectl apply -f service.yaml'
+                bat "docker run -d -p 5000:5000 %IMAGE_NAME%:%IMAGE_TAG%"
             }
         }
-        stage('Run Container') {
-    steps {
-        bat 'docker run -d -p 5000:5000 %flask-app%:%latest% '
     }
-}
+
+    post {
+        success {
+            echo 'App built and running locally in a Docker container.'
+        }
+        failure {
+            echo 'Build or run failed. Check logs above.'
+        }
     }
 }
