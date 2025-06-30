@@ -1,39 +1,30 @@
 pipeline {
     agent any
     environment {
-        ECR_REGISTRY = '794871348934.dkr.ecr.ap-south-1.amazonaws.com/my_monitoring_app_image'
-        IMAGE_NAME = 'my_monitoring_app_image'
+        IMAGE_NAME = 'flask-app'
+        IMAGE_TAG = 'latest'
     }
     stages {
         stage('Clone') {
             steps {
-                git 'https://github.com/BasammaLyavi/cloud-native-monitoring'
+                git branch: 'main', url: 'https://github.com/BasammaLyavi/cloud_native_monitoring_App.git'
             }
         }
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $my-flask-app .'
+                sh 'docker build -t basammalyavi12345/app1-k8s:latest .'
             }
         }
-        stage('Login to ECR') {
-            steps {
-                sh '''
-                794871348934.dkr.ecr.ap-south-1.amazonaws.com/my_monitoring_app_imagen 
-                '''
-            }
-        }
-        stage('Push Image to ECR') {
-            steps {
-                sh '''
-                docker tag $my-flask-app:latest $ECR_REGISTRY/$my_monitoring_app_image:latest
-                docker push $ECR_REGISTRY/$my-flask-app:latest
-                '''
-            }
-        }
-        stage('Deploy to EKS') {
+        stage('Deploy to Kubernetes') {
             steps {
                 sh 'kubectl apply -f deployment.yaml'
+                sh 'kubectl apply -f service.yaml'
             }
         }
+        stage('Run Container') {
+    steps {
+        sh 'docker run -d -p 5000:5000 basammalyavi12345/app1-k8s:latest'
+    }
+}
     }
 }
